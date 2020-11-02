@@ -63,7 +63,7 @@ echo -e "\033[49;33m start install git...... \033[0m"; sleep 1
 
 FILE_NAME="git.zip"
 (cd $FILE_PATH && unzip -q $FILE_NAME && cd git-master \
-&& make configure && ./configure --prefix=$APPSPATH && make -j4 && \
+&& make configure && ./configure --prefix=$APPSPATH && make -j$(nproc) && \
 make install)
 echo -e "\033[49;32m install git success! \033[0m"; echo
 
@@ -96,7 +96,7 @@ FILE_NAME="vim.zip"
 
 (cd $FILE_PATH && unzip -q $FILE_NAME && cd vim-master && \
  ./configure --prefix=$APPSPATH && \
- make -j4  && make install)
+ make -j$(nproc)  && make install)
 echo install vim8 success!; echo 
 
 # 安装vim-plug
@@ -122,13 +122,13 @@ yum install bison -y
 echo -e "\033[49;33m start install autoconf-2.69...... \033[0m"; sleep 1
 FILE_NAME="autoconf-2.69.tar.gz"
 (cd $FILE_PATH; tar -zxvf $FILE_NAME && cd autoconf-2.69 && ./configure --prefix=$APPSPATH && \
-make -j4 && make install)
+make -j$(nproc) && make install)
 
 echo -e "\033[49;33m start install automake-1.15...... \033[0m"; sleep 1
 FILE_NAME="automake-1.15.tar.gz"
 (cd $FILE_PATH; tar -zxvf $FILE_NAME && cd automake-1.15 && ./configure --prefix=$APPSPATH && \
 sed -i '3687s/$/ --no-discard-stderr/' Makefile && \
-make -j4 && make install)
+make -j$(nproc) && make install)
 
 echo -e "\033[49;33m start install GCC-9.3.0...... \033[0m"; sleep 1
 FILE_NAME="gcc-9.3.0.tar.gz"
@@ -137,13 +137,13 @@ cp -r $FILE_PATH/gcc-devel/* . && \
 sh contrib/download_prerequisites && \
 mkdir build && cd build && \
 ../configure --enable-checking=release --enable-languages=c,c++ --disable-multilib --prefix=$APPSPATH && \
-make -j4 && make install)
+make -j$(nproc) && make install)
 
 # 安装GDB 8.3
 echo -e "\033[49;33m start install GDB 8.3...... \033[0m"; sleep 1
 FILE_NAME="gdb-8.3.tar.gz"
 (cd $FILE_PATH; tar -zxvf $FILE_NAME && cd gdb-8.3 && ./configure --prefix=$APPSPATH && \
-make -j4 && make install)
+make -j$(nproc) && make install)
 
 echo -e "\033[49;32m install GDB 8.3 success! \033[0m"; echo
 
@@ -151,7 +151,7 @@ echo -e "\033[49;32m install GDB 8.3 success! \033[0m"; echo
 echo -e "\033[49;33m start install cmake-3.18.4...... \033[0m"; sleep 1
 FILE_NAME="cmake-3.18.4.tar.gz"
 (cd $FILE_PATH; tar -zxvf $FILE_NAME && cd cmake-3.18.4 && ./configure --prefix=$APPSPATH && \
-make -j4 && make install)
+make -j$(nproc) && make install)
 
 echo -e "\033[49;32m install cmake-3.18.4 success! \033[0m"; echo
 
@@ -162,5 +162,24 @@ echo -e "\033[49;32m install cmake-3.18.4 success! \033[0m"; echo
 # 
 # sed 's/robbyrussell/ys/g' .zshrc -i
 # EOF
+
+# 安装llvmorg-11.0.0
+echo -e "\033[49;33m start install llvmorg-11.0.0...... \033[0m"; sleep 1
+FILE_NAME="llvmorg-11.0.0.zip"
+(cd $FILE_PATH; unzip -q $FILE_NAME && cd llvmorg-11.0.0 && \
+mkdir build && cd build && \
+cmake -DLLVM_ENABLE_PROJECTS="clang;libcxx;libcxxabi" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$APPSPATH ../llvm &&\
+make -j$(nproc) && make install)
+
+echo -e "\033[49;32m install llvmorg-11.0.0 success! \033[0m"; echo
+
+# 安装ccls
+echo -e "\033[49;33m start install ccls...... \033[0m"; sleep 1
+(git clone --depth=1 --recursive https://github.com/MaskRay/ccls && \
+cd ccls && \
+cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$APPSPATH && \
+cd Release && make -j$(nproc) && make install)
+
+echo -e "\033[49;32m install ccls success! \033[0m"; echo
 
 echo -e "\033[49;32m finish! \033[0m"; echo

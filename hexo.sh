@@ -63,7 +63,7 @@ echo -e "\033[49;33m start install git...... \033[0m"; sleep 1
 
 FILE_NAME="git.zip"
 (cd $FILE_PATH && unzip -q $FILE_NAME && cd git-master \
-&& make configure && ./configure --prefix=$APPSPATH && make -j4 && \
+&& make configure && ./configure --prefix=$APPSPATH && make -j$(nproc) && \
 make install)
 echo -e "\033[49;32m install git success! \033[0m"; echo
 
@@ -96,7 +96,7 @@ FILE_NAME="vim.zip"
 
 (cd $FILE_PATH && unzip -q $FILE_NAME && cd vim-master && \
  ./configure --prefix=$APPSPATH && \
- make -j4  && make install)
+ make -j$(nproc)  && make install)
 echo install vim8 success!; echo 
 
 
