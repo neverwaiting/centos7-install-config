@@ -178,6 +178,7 @@ echo -e "\033[49;33m start install ccls...... \033[0m"; sleep 1
 (git clone --depth=1 --recursive https://github.com/MaskRay/ccls && \
 cd ccls && \
 cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$APPSPATH && \
+cmake -DCMAKE_INSTALL_PREFIX=$APPSPATH --build Release && \
 cd Release && make -j$(nproc) && make install)
 
 echo -e "\033[49;32m install ccls success! \033[0m"; echo
