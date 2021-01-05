@@ -17,7 +17,7 @@ while :; do
 done
 
 # 下载必备文件
-git clone https://e.coding.net/wintersun/centos-config/centos-config.git
+git clone https://e.coding.net/wintersun/centos-package/centos-package.git
 
 if [ $? -ne 0 ];then
     echo -e "\033[49;31m git clone error, cannot contine! \033[0m"
@@ -53,7 +53,7 @@ yum install bzip2 python3 bzip2-devel openssl-devel ncurses-devel \
 
 # 将文件转移到/opt/$username下
 FILE_PATH=/opt/$USER_NAME
-mkdir -p $FILE_PATH && cp -r centos-config/* $FILE_PATH/
+mkdir -p $FILE_PATH && cp -r centos-package/* $FILE_PATH/
 
 # remove 系统自带git
 yum -y remove git 
@@ -66,14 +66,14 @@ make install)
 
 
 # 添加环境变量
-echo "export PATH=$APPSPATH/bin:$PATH" >> /etc/profile && \
+echo "export PATH=$APPSPATH/bin:$APPSPATH/cmake-3.19.2-Linux-x86_64/bin:$PATH" >> /etc/profile && \
 echo "export LD_LIBRARY_PATH=$APPSPATH/lib:$APPSPATH/lib64:$LD_LIBRARY_PATH" >> /etc/profile && \
 source /etc/profile
 
 
 # 安装vim8
 FILE_NAME="vim-8.2.2202"
-(cd $FILE_PATH && tar -zxvf $FILE_NAME.tar.gz && cd FILE_NAME && \
+(cd $FILE_PATH && tar -zxvf $FILE_NAME.tar.gz && cd FILE_NAME/src && \
  ./configure --prefix=$APPSPATH && \
  make -j$(nproc)  && make install)
 
@@ -110,5 +110,4 @@ make -j$(nproc) && make install)
 
 # 安装cmake
 FILE_NAME="cmake-3.19.2-Linux-x86_64"
-(cd $FILE_PATH; tar -zxvf $FILE_NAME.tar.gz && cd $FILE_NAME && ./configure --prefix=$APPSPATH && \
-make -j$(nproc) && make install)
+(cd $FILE_PATH; tar -zxvf $FILE_NAME.tar.gz -C $APPSPATH)
